@@ -493,13 +493,11 @@ public class MarkerService
 			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
 					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
 			{
-				listMarker = this.markerRepository
-						.listMarkerByLayerAll(layerId);
+				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
 			}
 			else
 			{
-				listMarker = this.markerRepository.listMarkerByLayer(layerId,
-						user.getId());
+				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
 			}
 
 		}
@@ -536,13 +534,11 @@ public class MarkerService
 			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
 					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
 			{
-				listMarker = this.markerRepository
-						.listMarkerByLayerAll(layerId);
+				listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
 			}
 			else
 			{
-				listMarker = this.markerRepository.listMarkerByLayer(layerId,
-						user.getId());
+				listMarker = this.markerRepository.listMarkerByLayer(layerId, user.getId());
 			}
 
 		}
@@ -574,17 +570,7 @@ public class MarkerService
 		return geom;
 	}
 
-	// /**
-	// *
-	// * @param geometry
-	// * @return
-	// */
-	// private String geometryToWkt(Geometry geometry)
-	// {
-	// WKTWriter geom = new WKTWriter();
-	// return geom.write(geometry);
-	// }
-
+	
 	/**
 	 * Method to list all {@link Marker}
 	 * 
