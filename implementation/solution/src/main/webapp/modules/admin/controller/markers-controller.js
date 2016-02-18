@@ -170,11 +170,11 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * filter
      */
     $scope.filter = {
-        'layer': null,
-        'status': null,
-        'dateStart': null,
-        'dateEnd': null,
-        'user': null
+        layer: null,
+        status: null,
+        dateStart: null,
+        dateEnd: null,
+        user: null
     };
 
 
@@ -323,8 +323,8 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
      * Since the delete button calls a method directly via ng-click why does not have a specific screen state.
      */
     var GRID_ACTION_BUTTONS = '<div class="cell-centered button-action">' +
-        '<a ng-click="changeToDetail(row.entity)" title="' + $translate("admin.layer-config.Update") + '" class="btn btn-mini"><i style="color: #333; font-size: 18px" class="glyphicon glyphicon-eye-open"></i></a>' +
-        '</div>';
+      '<a ng-click="changeToDetail(row.entity)" title="' + $translate("admin.layer-config.Update") + '" class="btn btn-mini"><i style="color: #333; font-size: 18px" class="glyphicon glyphicon-eye-open"></i></a>' +
+      '</div>';
 
     //var IMAGE_MODERATION = '<div  class="cell-centered">' +
     //    '<a ng-if="row.entity.status == \'PENDING\' " class="icon-waiting-moderation"></a>' +
@@ -334,12 +334,12 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
     //    '</div>';
 
     var IMAGE_MODERATION = '<div  class="cell-centered">' +
-        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></i>' +
-        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></i>' +
-        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></i>' +
-        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></i>' +
-        '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></i>' +
-        '</div>';
+      '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'PENDING\' " class="icon itaipu-icon-schedules"></i>' +
+      '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'ACCEPTED\' " class="icon itaipu-icon-like-filled"></i>' +
+      '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'REFUSED\' " class="icon itaipu-icon-dislike"></i>' +
+      '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'CANCELED\' " class="icon itaipu-icon-close"></i>' +
+      '<i title="{{translateByStatus(row.entity.status)}}" ng-if="row.entity.status == \'SAVED\' " class="icon itaipu-icon-floppy"></i>' +
+      '</div>';
 
 
     $scope.gridOptions = {
@@ -440,10 +440,10 @@ function MarkersController($scope, $injector, $log, $state, $timeout, $modal, $l
                 displayName: $translate('admin.marker-moderation.Layer'),
                 field: 'layer.title',
                 cellTemplate:
-                    '<span title="{{row.entity.layer.title}}" ' +
-                    'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
-                         '{{row.entity.layer.title }}' +
-                    '</span>'
+                '<span title="{{row.entity.layer.title}}" ' +
+                'style="font-size: 14px; max-width: 95%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 7px;">' +
+                '{{row.entity.layer.title }}' +
+                '</span>'
             },
             {
                 displayName: $translate('admin.marker-moderation.Created-at'),
@@ -523,7 +523,7 @@ ront controller of angle won't let enter an invalid URL.
             $scope.changeToList();
         }
 
-    	/**
+        /**
          * It is necessary to remove the sortInfo attribute because the return of an edition was doubling the value of the same with the Sort attribute
          * preventing the ordinations in the columns of the grid.
          */
@@ -544,57 +544,6 @@ ront controller of angle won't let enter an invalid URL.
              * */
             var statusColor = $scope.verifyStatusColor(marker.status);
 
-            var dragBox = new ol.interaction.DragBox({
-                condition: function () {
-                    return $scope.selectMarkerTool;
-                },
-                style: new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: [0, 0, 255, 1]
-                    })
-                })
-            });
-
-            dragBox.on('boxend', function (e) {
-
-                var extent = dragBox.getGeometry().getExtent();
-                var markers = [];
-
-                angular.forEach($scope.features, function (feature, index) {
-                    var marker = feature.feature.getProperties().marker;
-                    $scope.selectMarker(marker);
-
-                    var extentMarker = feature.extent;
-                    var feature = feature.feature;
-
-                    if (ol.extent.containsExtent(extent, extentMarker)) {
-                        markers.push(marker.id);
-
-                        angular.forEach($scope.selectedFeatures, function (selected, index) {
-                            if (selected.marker.id == marker.id) {
-                                selected.feature.push(feature);
-                            }
-                        });
-
-                    }
-                });
-
-                if (markers.length) {
-                    $scope.changeToList(markers);
-                    $scope.dragMarkers = markers;
-                }
-
-
-                $scope.drag = true;
-            });
-
-
-            dragBox.on('boxstart', function (e) {
-                $scope.clearFeatures();
-            });
-
-            $scope.map.addInteraction(dragBox);
-
             var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
             var feature = new ol.Feature({
                 geometry: geometry,
@@ -614,15 +563,15 @@ ront controller of angle won't let enter an invalid URL.
             var layer = new ol.layer.Vector({
                 source: source,
                 style: new ol.style.Style(
-                    {
-                        image: new ol.style.Circle({
-                            fill: fill,
-                            stroke: stroke,
-                            radius: 10,
-                        }),
-                        fill: fill,
-                        stroke: stroke
-                    }
+                  {
+                      image: new ol.style.Circle({
+                          fill: fill,
+                          stroke: stroke,
+                          radius: 10,
+                      }),
+                      fill: fill,
+                      stroke: stroke
+                  }
                 ),
                 maxResolution: minScaleToMaxResolution(marker.layer.minimumScaleMap),
                 minResolution: maxScaleToMinResolution(marker.layer.maximumScaleMap)
@@ -1095,7 +1044,7 @@ ront controller of angle won't let enter an invalid URL.
             $scope.removeLayers();
         }
 
-        if ($scope.hasSearch) {
+        if (!$scope.hasSearch) {
             //if it was done some search, return the searched markers on the map
             $scope.buildMarker(markers);
         } else {
@@ -1106,8 +1055,9 @@ ront controller of angle won't let enter an invalid URL.
 
     $scope.listMarkerByMarkersNoVectorMarkers = function (markers, pageRequest) {
 
-        markerService.listMarkerByMarkers(markers, pageRequest, {
+        myMarkersService.listMarkerByFiltersByUser(null, null, null, null, pageRequest, {
             callback: function (result) {
+
                 if (!$scope.drag) {
                     $scope.refreshMapNoVectorMarkers(result);
                 }
@@ -1126,26 +1076,47 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             }
         });
+
+        /*markerService.listMarkerByMarkers(markers, pageRequest, {
+         callback: function (result) {
+         if (!$scope.drag) {
+         $scope.refreshMapNoVectorMarkers(result);
+         }
+
+         if ($scope.hasSearch || $scope.drag) {
+         $scope.currentPage = result;
+         $scope.currentPage.pageable.pageNumber++;
+         }
+
+         $scope.currentState = $scope.LIST_STATE;
+         $scope.$apply();
+         },
+         errorHandler: function (message, exception) {
+         $scope.msg = {type: "error", text: message, dismiss: true};
+         $scope.fadeMsg();
+         $scope.$apply();
+         }
+         });*/
     };
 
     /**
      * Resolve date picker
      */
     $scope.resolveDatePicker = function () {
-      $timeout(function () {
-        $('.datepicker').datepicker({
-          dateFormat: 'dd/mm/yy',
-          dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-          dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-          dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-          monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-          monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-          nextText: 'Próximo',
-          prevText: 'Anterior'
-        });
+        $timeout(function () {
+            $('.datepicker').datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Próximo',
+                prevText: 'Anterior'
+            });
 
-        $('.datepicker').mask("99/99/9999");
-      }, 400);
+            $('.datepicker').mask("99/99/9999");
+        }, 400);
     };
 
     /**
@@ -1285,57 +1256,6 @@ ront controller of angle won't let enter an invalid URL.
              * */
             var statusColor = $scope.verifyStatusColor(marker.status);
 
-            var dragBox = new ol.interaction.DragBox({
-                condition: function () {
-                    return $scope.selectMarkerTool;
-                },
-                style: new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: [0, 0, 255, 1]
-                    })
-                })
-            });
-
-            dragBox.on('boxend', function (e) {
-
-                var extent = dragBox.getGeometry().getExtent();
-                var markers = [];
-
-                angular.forEach($scope.features, function (feature, index) {
-                    var marker = feature.feature.getProperties().marker;
-                    $scope.selectMarker(marker);
-
-                    var extentMarker = feature.extent;
-                    var feature = feature.feature;
-
-                    if (ol.extent.containsExtent(extent, extentMarker)) {
-                        markers.push(marker.id);
-
-                        angular.forEach($scope.selectedFeatures, function (selected, index) {
-                            if (selected.marker.id == marker.id) {
-                                selected.feature.push(feature);
-                            }
-                        });
-
-                    }
-                });
-
-                if (markers.length) {
-                    $scope.changeToList(markers);
-                    $scope.dragMarkers = markers;
-                }
-
-
-                $scope.drag = true;
-            });
-
-
-            dragBox.on('boxstart', function (e) {
-                $scope.clearFeatures();
-            });
-
-            $scope.map.addInteraction(dragBox);
-
             var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
             var feature = new ol.Feature({
                 geometry: geometry,
@@ -1355,15 +1275,15 @@ ront controller of angle won't let enter an invalid URL.
             var layer = new ol.layer.Vector({
                 source: source,
                 style: new ol.style.Style(
-                    {
-                        image: new ol.style.Circle({
-                            fill: fill,
-                            stroke: stroke,
-                            radius: 10,
-                        }),
-                        fill: fill,
-                        stroke: stroke
-                    }
+                  {
+                      image: new ol.style.Circle({
+                          fill: fill,
+                          stroke: stroke,
+                          radius: 10,
+                      }),
+                      fill: fill,
+                      stroke: stroke
+                  }
                 ),
                 maxResolution: minScaleToMaxResolution(marker.layer.minimumScaleMap),
                 minResolution: maxScaleToMinResolution(marker.layer.maximumScaleMap)
@@ -1385,6 +1305,9 @@ ront controller of angle won't let enter an invalid URL.
      * Build the vectors in the map
      */
     $scope.buildVectorMarker = function (markers) {
+
+        $scope.features = [];
+
         $scope.drag = false;
         var coordenates = [];
 
@@ -1394,57 +1317,6 @@ ront controller of angle won't let enter an invalid URL.
              * Verify status
              * */
             var statusColor = $scope.verifyStatusColor(marker.status);
-
-            var dragBox = new ol.interaction.DragBox({
-                condition: function () {
-                    return $scope.selectMarkerTool;
-                },
-                style: new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: [0, 0, 255, 1]
-                    })
-                })
-            });
-
-            dragBox.on('boxend', function (e) {
-
-                var extent = dragBox.getGeometry().getExtent();
-                var markers = [];
-
-                angular.forEach($scope.features, function (feature, index) {
-                    var marker = feature.feature.getProperties().marker;
-                    $scope.selectMarker(marker);
-
-                    var extentMarker = feature.extent;
-                    var feature = feature.feature;
-
-                    if (ol.extent.containsExtent(extent, extentMarker)) {
-                        markers.push(marker.id);
-
-                        angular.forEach($scope.selectedFeatures, function (selected, index) {
-                            if (selected.marker.id == marker.id) {
-                                selected.feature.push(feature);
-                            }
-                        });
-
-                    }
-                });
-
-                if (markers.length) {
-                    $scope.changeToList(markers);
-                    $scope.dragMarkers = markers;
-                }
-
-
-                $scope.drag = true;
-            });
-
-
-            dragBox.on('boxstart', function (e) {
-                $scope.clearFeatures();
-            });
-
-            $scope.map.addInteraction(dragBox);
 
             var geometry = new ol.format.WKT().readGeometry(marker.location.coordinateString);
             var feature = new ol.Feature({
@@ -1465,15 +1337,15 @@ ront controller of angle won't let enter an invalid URL.
             var layer = new ol.layer.Vector({
                 source: source,
                 style: new ol.style.Style(
-                    {
-                        image: new ol.style.Circle({
-                            fill: fill,
-                            stroke: stroke,
-                            radius: 10,
-                        }),
-                        fill: fill,
-                        stroke: stroke
-                    }
+                  {
+                      image: new ol.style.Circle({
+                          fill: fill,
+                          stroke: stroke,
+                          radius: 10,
+                      }),
+                      fill: fill,
+                      stroke: stroke
+                  }
                 ),
                 maxResolution: minScaleToMaxResolution(marker.layer.minimumScaleMap),
                 minResolution: maxScaleToMinResolution(marker.layer.maximumScaleMap)
@@ -1927,9 +1799,9 @@ ront controller of angle won't let enter an invalid URL.
         }
 
         /*if (!$scope.form('markerDetail').$valid) {
-            $scope.isLoading = false;
-            return;
-        }*/
+         $scope.isLoading = false;
+         return;
+         }*/
 
         if(!$scope.isPostMarker) {
             if (!($scope.currentEntity.status == $scope.PENDING || $scope.currentEntity.status == $scope.ACCEPTED)) {
@@ -2042,23 +1914,23 @@ ront controller of angle won't let enter an invalid URL.
 
         /*angular.forEach($scope.attributesByLayer, function (val, ind) {
 
-            //var markerAttribute = $filter('filter')($scope.currentEntity.markerAttribute, {id: val.id});
+         //var markerAttribute = $filter('filter')($scope.currentEntity.markerAttribute, {id: val.id});
 
-            var attribute = new Attribute();
-            attribute.id = val.id;
+         var attribute = new Attribute();
+         attribute.id = val.id;
 
-            var markerAttribute = new MarkerAttribute();
-            if (val.value != "" && val.value != undefined) {
-                markerAttribute.value = val.value;
-            } else {
-                markerAttribute.value = "";
-            }
+         var markerAttribute = new MarkerAttribute();
+         if (val.value != "" && val.value != undefined) {
+         markerAttribute.value = val.value;
+         } else {
+         markerAttribute.value = "";
+         }
 
-            markerAttribute.attribute = attribute;
-            markerAttribute.marker = $scope.currentEntity;
-            $scope.currentEntity.markerAttribute.push(markerAttribute);
+         markerAttribute.attribute = attribute;
+         markerAttribute.marker = $scope.currentEntity;
+         $scope.currentEntity.markerAttribute.push(markerAttribute);
 
-        });*/
+         });*/
 
         /* Remove image to update */
         angular.forEach($scope.currentEntity.markerAttribute, function(markerAttribute){
@@ -2315,6 +2187,58 @@ ront controller of angle won't let enter an invalid URL.
         };
 
         $scope.selectMarkerTool = $scope.menu.selectMarker;
+
+        var dragBox = new ol.interaction.DragBox({
+            condition: function () {
+                return $scope.selectMarkerTool;
+            },
+            style: new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: [0, 0, 255, 1]
+                })
+            })
+        });
+
+        dragBox.on('boxend', function (e) {
+
+            var extent = dragBox.getGeometry().getExtent();
+            var markers = [];
+
+            angular.forEach($scope.features, function (feature, index) {
+                var marker = feature.feature.getProperties().marker;
+
+                $scope.selectMarker(marker);
+
+                var extentMarker = feature.extent;
+                var feature = feature.feature;
+
+                if (ol.extent.containsExtent(extent, extentMarker)) {
+                    markers.push(marker.id);
+
+                    angular.forEach($scope.selectedFeatures, function (selected, index) {
+                        if (selected.marker.id == marker.id) {
+                            selected.feature.push(feature);
+                        }
+                    });
+
+                }
+            });
+
+            if (markers.length) {
+                $scope.changeToList(markers);
+                $scope.dragMarkers = markers;
+            }
+
+
+            $scope.drag = true;
+        });
+
+
+        dragBox.on('boxstart', function (e) {
+            $scope.clearFeatures();
+        });
+
+        $scope.map.addInteraction(dragBox);
 
     };
 
@@ -2629,21 +2553,21 @@ ront controller of angle won't let enter an invalid URL.
         $scope.map.addInteraction(draw);
 
         draw.on('drawstart',
-            function (evt) {
-                // set sketch
-                sketch = evt.feature;
+          function (evt) {
+              // set sketch
+              sketch = evt.feature;
 
-                // clean the ancient markings
-                source.clear();
+              // clean the ancient markings
+              source.clear();
 
-            }, this);
+          }, this);
 
         draw.on('drawend',
-            function (evt) {
-                // unset sketch
-                sketch = null;
+          function (evt) {
+              // unset sketch
+              sketch = null;
 
-            }, this);
+          }, this);
     }
 
 
@@ -2655,10 +2579,10 @@ ront controller of angle won't let enter an invalid URL.
         var output;
         if (length > 100) {
             output = (Math.round(length / 1000 * 100) / 100) +
-                ' ' + 'km';
+              ' ' + 'km';
         } else {
             output = (Math.round(length * 100) / 100) +
-                ' ' + 'm';
+              ' ' + 'm';
         }
         return output;
     };
@@ -2672,10 +2596,10 @@ ront controller of angle won't let enter an invalid URL.
         var output;
         if (area > 10000) {
             output = (Math.round(area / 1000000 * 100) / 100) +
-                ' ' + 'km<sup>2</sup>';
+              ' ' + 'km<sup>2</sup>';
         } else {
             output = (Math.round(area * 100) / 100) +
-                ' ' + 'm<sup>2</sup>';
+              ' ' + 'm<sup>2</sup>';
         }
         return output;
     };
