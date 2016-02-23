@@ -154,10 +154,10 @@
 				<mvn.mail.support>geocab@itaipu.gov.br</mvn.mail.support>			
 			
 				<!-- ModeShape -->
-				<mvn.jcr.indexes>/tmp/geocab-homologation/indexes</mvn.jcr.indexes>
-				<mvn.jcr.files>/tmp/geocab-homologation/files</mvn.jcr.files>
-				<mvn.jcr.caches>/tmp/geocab-homologation/files</mvn.jcr.caches>
-				<mvn.path.shapefiles>/tmp/geocab-homologation/files/shapefile/</mvn.path.shapefiles>
+				<mvn.jcr.indexes>/tmp/geocab/indexes</mvn.jcr.indexes>
+				<mvn.jcr.files>/sistemas/geocab/upload</mvn.jcr.files>
+				<mvn.jcr.caches>/tmp/geocab/cache</mvn.jcr.caches>
+				<mvn.path.shapefiles>/tmp/geocab/files/shapefile/</mvn.path.shapefiles>
 
 				<!-- Social -->
 				<!-- Facebook -->

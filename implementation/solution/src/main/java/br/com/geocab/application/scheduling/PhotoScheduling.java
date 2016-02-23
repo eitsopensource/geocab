@@ -44,7 +44,7 @@ public class PhotoScheduling
 	/**
 	 * Log
 	 */
-	private static final Logger LOG = Logger.getLogger(DataSourceService.class.getName());
+//	private static final Logger LOG = Logger.getLogger(DataSourceService.class.getName());
 	
 	/**
 	 * 
@@ -144,7 +144,6 @@ public class PhotoScheduling
 			}
 			catch (RepositoryException | RuntimeException e)
 			{
-				e.printStackTrace();
 				continue;
 			}
 		}	
@@ -187,7 +186,7 @@ public class PhotoScheduling
 		}
 		catch (IOException | RepositoryException e)
 		{
-			LOG.info(e.getMessage());
+			//LOG.info(e.getMessage());
 		}
 
 		return photo;
