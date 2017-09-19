@@ -1,20 +1,16 @@
 package br.com.geocab.domain.entity.layer;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 
 import br.com.geocab.domain.entity.AbstractEntity;
-import br.com.geocab.domain.entity.marker.MarkerAttribute;
 
 @Entity
 @Audited

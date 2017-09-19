@@ -19,7 +19,6 @@ import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.omg.SendingContext.RunTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
