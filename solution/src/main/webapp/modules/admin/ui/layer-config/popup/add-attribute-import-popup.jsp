@@ -39,7 +39,8 @@
                         <tr sv-element ng-form name="innerForm_{{$index}}" ng-repeat="attribute in markerAttributes track by $index">
                             <td sv-handle class="reorder"></td>
                             
-							<td><input type="text" name="name" class="form-control"
+							<td>
+                                <input type="text" name="name" class="form-control"
 								ng-model="attribute.attribute.name"
 								placeholder="<spring:message code="admin.layer-config.Attribut-name" />"
 								ng-class="{'ngInvalid': form_add_attribute.$submitted && innerForm_{{$index}}.name.$error.required }"
@@ -47,16 +48,14 @@
 								
 								<div style="margin-left: 20px" ng-if="attribute.attribute.type == 'MULTIPLE_CHOICE'">
 
-									<div class="row">
-									
-										<span>Opções do atributo</span>
-								
-										
-										<button class="btn btn-default" ng-click="addOption( attribute.attribute )">
-											<i class="icon-plus icon-large"></i>
-										</button>
-										
-									</div>
+                                    <div class="row" style="margin-bottom: 8px;">
+                                        <h5 class="col-md-10">Opções do atributo</h5>
+                                   
+                                        <div class="col-md-2">
+                                            <button class="btn btn-default"  ng-click="addOption(attribute.attribute)"><i class="icon-plus icon-large"></i></button>
+                                        </div>
+                                    </div>
+
 									<div ng-repeat="option in attribute.attribute.options" class="row"
 										style="margin-bottom: 8px;">
 										<div class="input-group">
@@ -74,16 +73,15 @@
 								</div></td>
 							<td>
                                 <select name="select" class="form-control" ng-model="attribute.attribute.type"
-                                        ng-class="{ngInvalid: form_add_attribute.$submitted && innerForm_{{$index}}.select.$error.required }"
-                                        required>
-                                <option value=""  disabled selected style="display:none" ><spring:message code="admin.layer-config.Attribute-type" /></option>
-                                <option value="TEXT"><spring:message code="admin.layer-config.Text" /></option>
-                                <option value="NUMBER"><spring:message code="admin.layer-config.Number" /></option>
-                                <option value="DATE"><spring:message code="admin.layer-config.Date" /></option>
-                                <option value="BOOLEAN"><spring:message code="admin.layer-config.Boolean" /></option>
-                                <option value="PHOTO_ALBUM"><spring:message code="admin.layer-config.Photo-album" /></option>
-                                <option value="MULTIPLE_CHOICE"><spring:message code="admin.layer-config.Multiple_choice" /></option>
-                            </select>
+                                        ng-class="{ngInvalid: form_add_attribute.$submitted && innerForm_{{$index}}.select.$error.required }" required>
+                                    <option value=""  disabled selected style="display:none" ><spring:message code="admin.layer-config.Attribute-type" /></option>
+                                    <option value="TEXT"><spring:message code="admin.layer-config.Text" /></option>
+                                    <option value="NUMBER"><spring:message code="admin.layer-config.Number" /></option>
+                                    <option value="DATE"><spring:message code="admin.layer-config.Date" /></option>
+                                    <option value="BOOLEAN"><spring:message code="admin.layer-config.Boolean" /></option>
+                                    <option value="PHOTO_ALBUM"><spring:message code="admin.layer-config.Photo-album" /></option>
+                                    <option value="MULTIPLE_CHOICE"><spring:message code="admin.layer-config.Multiple_choice" /></option>
+                                </select>
                             </td>
                             <td style="text-align: center"><input type="checkbox" ng-model="attribute.attribute.required"></td>
                             <td style="text-align: center"><input type="checkbox" ng-model="attribute.attribute.visible"></td>
