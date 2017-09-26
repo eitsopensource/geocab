@@ -10,7 +10,8 @@
     <div style="height:90vh; overflow:auto;">
 
         <div class="col-md-12" style="padding: 15px; background-color: #f5f5f5">
-            <div class="col-md-1" style="margin-top: 10px">
+
+            <div class="col-lg-1 col-md-2" style="margin-top: 10px">
                 <i style="cursor:pointer; font-size: 25px;" ng-click="$state.go('markers'); changeToListNoVectorMarkers(currentPage);"
                    class="icon itaipu-icon-arrow-left-1">
                 </i>
@@ -79,28 +80,25 @@
                                 </div>
 
                                 <input
-                                type="number"
-                                name="number1"
-                                ng-if="markerAttribute.attribute.type == 'NUMBER'"
-                                class="form-control"
-                                ng-model="markerAttribute.value"
-                                maxlength="255"
-                                ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-                                ng-required="markerAttribute.attribute.required"
+                                    ng-if="markerAttribute.attribute.type == 'NUMBER'"
+                                    type="number"
+                                    name="number1"
+                                    class="form-control"
+                                    ng-model="markerAttribute.value"
+                                    maxlength="255"
+                                    ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
+                                    ng-required="markerAttribute.attribute.required"
                                 >
-                                
-					            <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'" class="column">
-					            	<div ng-repeat="option in markerAttribute.attribute.options">
-						                <label class="radio-label" ng-click="markerAttribute.selectedAttribute = option" >
-							            	<input id="role-adminstrator" type="radio" ng-value="option" 
-							            			ng-checked="markerAttribute.selectedAttribute.id == option.id"
-							            			 />
-							            	{{ option.description }} 
-						                </label>
-						                </br>
-					            	</div>
-					            	
-					            </div>
+                                 
+                                <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
+                                    <div ng-repeat="option in markerAttribute.attribute.options" 
+                                        ng-click="markerAttribute.selectedAttribute = (currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED') ? option : markerAttribute.selectedAttribute">
+                                        <div class="radio" style="margin: 0">
+                                            <input type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id">
+                                            <label class="radio-label"> {{ option.description }} </label>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <input
                                 name="date1"
@@ -180,7 +178,11 @@
 
                     </div>
 
+                    
                 </fieldset>
+
+                <div style="height: 100px"></div>
+
             </form>
         </div>
 

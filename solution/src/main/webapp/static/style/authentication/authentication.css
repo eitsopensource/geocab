@@ -1,7 +1,7 @@
 
 
 body {
-	padding-top: 8%;
+	/* padding-top: 8%; */
 	overflow-x: hidden;
 	background-color: #f6f6f6 !important;
     background-image: url("pmi-bg.png");
@@ -73,7 +73,7 @@ input.ng-invalid.ng-dirty{
 .login-wrapper {
 	width: 100%;
 	max-width: 580px;
-	height: 650px;
+	height: 800px;
 	margin: 0 auto;
 	background-color: #ffffff;
 }

@@ -59,6 +59,7 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 	 * @param type
 	 * @return
 	 */
+//	@Query(value="SELECT new MarkerAttribute(  markerAttribute.id, markerAttribute.value, markerAttribute.selectedAttribute, "
 	@Query(value="SELECT new MarkerAttribute(  markerAttribute.id, markerAttribute.value, "
 			+ "attribute.id, "
 			+ "marker.id, marker.location, marker.status, marker.deleted, marker.user, "
@@ -69,6 +70,9 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 				 " LEFT OUTER JOIN markerAttribute.attribute attribute " + 
 				 " WHERE ((attribute.id = :attributeId) "
 				 + "AND ( LOWER(markerAttribute.value) LIKE '%' || LOWER(CAST(:value AS string))  || '%' OR :value IS NULL )  "
+//				 + "AND ( (LOWER(markerAttribute.value) LIKE '%' || LOWER(CAST(:value AS string))  || '%') OR "
+//				 	+ "( (:value IS NOT NULL) AND CAST(markerAttribute.selectedAttribute.id AS string) = :value ) OR"
+//				 	+ " (:value IS NULL) )  "
 				 + "AND ( LOWER(markerAttribute.attribute.name) LIKE '%' || LOWER(CAST(:name AS string))  || '%' OR :name IS NULL )  "
 				 + "AND ((markerAttribute.attribute.type = :type) OR :type IS NULL))")
 	public List<MarkerAttribute> listMarkerAttributeByAttributeIdAndFilters( @Param("attributeId") Long attributeId,

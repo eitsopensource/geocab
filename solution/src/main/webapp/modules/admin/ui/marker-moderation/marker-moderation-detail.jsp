@@ -10,7 +10,7 @@
     <div style="height:90vh; overflow:auto;">
 
         <div class="col-md-12" style="padding: 15px; background-color: #f5f5f5">
-            <div class="col-md-1" style="margin-top: 10px">
+            <div class="col-lg-1 col-md-2" style="margin-top: 10px">
                 <i style="cursor:pointer; font-size: 25px;" ng-click="changeToListNoVectorMarkers(currentPage)"
                    class="icon itaipu-icon-arrow-left-1">
                 </i>
@@ -67,19 +67,19 @@
                                 ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
                                 class="form-control datepicker" ng-model="markerAttribute.value"
                                 required
-                                ng-disabled="true">
+                                ng-disabled="true"
+                        >
+                        
+                        <!-- MULTIPLE_CHOICE -->
+                        <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'  &&  markerAttribute.selectedAttribute && markerAttribute.selectedAttribute.description">
+                            <label>{{markerAttribute.attribute.name}}</label>
+                            <div class="radio" style="margin: 0">
+                              <input ng-disabled="true" type="radio" ng-checked="true">
+                              <label class="radio-label"> {{ markerAttribute.selectedAttribute.description }} </label>
+                            </div>
+                        </div>
 
-				            <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
-				            	<label>{{markerAttribute.attribute.name}}</label>
-				            	</br>
-				            	<div ng-repeat="option in markerAttribute.attribute.options">
-					                <label class="radio-label" >
-						            	<input id="role-adminstrator" ng-disabled="true" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id" />
-						            	{{ option.description }}
-					                </label>
-					                </br>
-				            	</div>
-				            </div>
+
                         <div ng-if="markerAttribute.attribute.type == 'BOOLEAN' && !markerAttribute.value == ''">
                             <input
                                     ng-disabled="true" type="radio"

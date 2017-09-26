@@ -105,49 +105,49 @@
               <li class="position-relative"><a
                   href="admin#/users"
                   ng-class="{active: menuActive == 'users'}"
-                  style="width: 150px;">
+                  style="width: 140px;">
                 <spring:message code="admin.users.Users"/>
               </a></li>
 
               <li class="position-relative"><a
                   href="admin#/data-source"
                   ng-class="{active: menuActive == 'data-source'}"
-                  style="width: 150px;">
+                  style="width: 140px;">
                 <spring:message code="admin.datasource.Data-Source"/>
                </a></li>
 
               <li class="position-relative"><a
                   href="admin#/layer-group"
                   ng-class="{active: menuActive == 'layer-group'}"
-                  style="width: 150px;">
+                  style="width: 140px;">
                 <spring:message code="admin.layer-group.Layer-group"/>
               </a></li>
 
               <li class="position-relative"><a
                   href="admin#/layer-config"
                   ng-class="{active: menuActive == 'layer-config'}"
-                  style="width: 150px;">
+                  style="width: 140px;">
                 <spring:message code="admin.layer-config.Layers"/>
               </a></li>
 
               <li class="position-relative"><a
                   href="admin#/custom-search"
                   ng-class="{active: menuActive == 'custom-search'}"
-                  style="width: 150px;">
+                  style="width: 140px;">
                 <spring:message code="admin.custom-search.Search"/>
               </a></li>
 
               <li class="position-relative"><a
                   href="admin#/access-group"
                   ng-class="{active: menuActive == 'access-group'}"
-                  style="width: 150px;">
+                  style="width: 140px;">
                 <spring:message code="admin.access-group.Access-group"/>
               </a></li>
 
               <li class="position-relative"><a
                   href="admin#/marker-moderation"
                   ng-class="{active: menuActive == 'marker-moderation'}"
-                  style="width: 150px;">
+                  style="width: 145px;">
                 <spring:message code="admin.marker-moderation.marker-moderation"/>
               </a></li>
 
@@ -158,14 +158,14 @@
                 <li class="position-relative">
                     <a      href="admin#/markers"
                             ng-class="{active: menuActive == 'markers'}"
-                            style="width: 150px;">
+                            style="width: 145px;">
                         <spring:message code="admin.access-group.my-markers"/>
                     </a>
                 </li>
                 <li class="position-relative">
                     <a  href="user#/configurations"
                         ng-class="{active: menuActive == 'configurations'}"
-                        style="width: 150px;">
+                        style="width: 140px;">
                         <spring:message code="Configurations"/>
                     </a>
                 </li>

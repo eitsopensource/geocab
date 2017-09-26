@@ -362,5 +362,4 @@ public class LayerField extends AbstractEntity implements Serializable
 	}
 	
 	
-	
 }

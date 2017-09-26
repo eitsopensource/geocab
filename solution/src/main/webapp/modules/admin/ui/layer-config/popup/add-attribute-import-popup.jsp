@@ -70,7 +70,8 @@
 											</span>
 										</div>
 									</div>
-								</div></td>
+                                </div>
+                            </td>
 							<td>
                                 <select name="select" class="form-control" ng-model="attribute.attribute.type"
                                         ng-class="{ngInvalid: form_add_attribute.$submitted && innerForm_{{$index}}.select.$error.required }" required>

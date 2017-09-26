@@ -324,7 +324,7 @@ public class CustomSearchService
 					if(layer.getId().equals(customSearch.getLayer().getId()))
 					{
 						accessGroupCustomSearch.setCustomSearch(customSearch);
-
+					
 						accessGroupCustomSearch.getCustomSearch().setLayerFields(new HashSet<>(layerFieldRepository.findByCustomSearchId(accessGroupCustomSearch.getCustomSearch().getId())));
 						
 						customsSearchUser.add(accessGroupCustomSearch.getCustomSearch());	
@@ -440,6 +440,9 @@ public class CustomSearchService
 				if (layerField.getValue() != null
 						&& layerField.getValue().length() > 0)
 				{
+					
+	
+					
 					markersAttribute.addAll(this.markerAttributeRepository
 							.listMarkerAttributeByAttributeIdAndFilters(
 									layerField.getAttributeId(),
@@ -448,6 +451,13 @@ public class CustomSearchService
 											.findById(
 													layerField.getAttributeId())
 											.getType()));
+					
+					System.out.println("type: " + this.attributeRepository.findById(layerField.getAttributeId()).getType());
+					System.out.println("AttributeId: " + layerField.getAttributeId());
+					System.out.println("name "  +layerField.getName());
+					System.out.println("value: " + layerField.getValue());
+					System.out.println("achou: " + markersAttribute.size());
+					
 				}
 			}
 		}

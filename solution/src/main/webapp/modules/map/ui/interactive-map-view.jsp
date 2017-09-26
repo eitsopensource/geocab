@@ -186,20 +186,44 @@ uri="http://www.springframework.org/security/tags"%>
 
                           <label ng-style="$index > 0 ? {'margin-top':'15px'} : '' " ng-if="!markerAttribute.value == '' || markerAttribute.value == '0'">{{ markerAttribute.attribute.name }}</label>
 
+                          <!-- NUMBER -->                          
                           <input
                               type="number" name="number1"
                               ng-if="(markerAttribute.attribute.type == 'NUMBER' && !markerAttribute.value == '') || markerAttribute.value == '0' "
                               class="form-control" ng-model="markerAttribute.value"
-                              required ng-disabled="true"
-                              >
+                              required ng-disabled="true">
+                          
                               
-				            <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
-				            	<label>{{markerAttribute.attribute.name}}</label>
-				                <label class="radio-label" ng-repeat="option in markerAttribute.attribute.options">
-					            	<input id="role-adminstrator" ng-disabled="true" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id" />
-					            	{{ option.description }}
-				                </label>
-				            </div>
+                              <!-- <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE------'">
+                                <label>{{markerAttribute.attribute.name}}</label>
+                                <label class="radio-label" ng-repeat="option in markerAttribute.attribute.options">
+                                  
+                                  <input ng-disabled="true" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id" />
+                                  
+                                  {{ option.description }}
+                                  
+                                </label>
+                              </div>
+                               -->
+                               
+                          <!-- MULTIPLE_CHOICE -->  
+                          <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'  &&  markerAttribute.selectedAttribute && markerAttribute.selectedAttribute.description">
+                              <label>{{markerAttribute.attribute.name}}</label>
+
+                              <div class="radio" style="margin: 0">
+                                <input ng-disabled="true" type="radio" ng-checked="true">
+                                <label class="radio-label"> {{ markerAttribute.selectedAttribute.description }} </label>
+                              </div>
+                              
+                              <!-- <div ng-repeat="option in markerAttribute.attribute.options">
+                                <div class="radio" style="margin: 0">
+                                  <input ng-disabled="true" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id">
+                                  <label class="radio-label"> {{ option.description }} </label>
+                                </div>
+                              </div> -->
+                          </div>
+
+                          <!-- DATE -->
                           <input
                               name="date1"
                               ng-if="markerAttribute.attribute.type == 'DATE' && !markerAttribute.value == ''"
@@ -208,6 +232,7 @@ uri="http://www.springframework.org/security/tags"%>
                               ng-disabled="true"
                               >
 
+                          <!-- BOOLEAN -->
                           <div ng-if="markerAttribute.attribute.type == 'BOOLEAN' && !markerAttribute.value == ''">
                             <input
                                 ng-disabled="true" type="radio"
@@ -226,6 +251,7 @@ uri="http://www.springframework.org/security/tags"%>
                             <spring:message code="map.No" />
                           </div>
 
+                          <!-- TEXT -->                          
                           <div
                               ng-if="markerAttribute.attribute.type == 'TEXT' && !markerAttribute.value == ''"
                               name="texto"
@@ -346,15 +372,19 @@ uri="http://www.springframework.org/security/tags"%>
                     <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'" style="margin-top: 10px">{{ markerAttribute.attribute.name }}</label>
 
                     <label ng-if="markerAttribute.attribute.type == 'PHOTO_ALBUM'" style="height: 34px;line-height: 34px; margin-bottom: 15px;">{{ markerAttribute.attribute.name }}</label>
-		            
-		            <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
-		                <label class="radio-label" ng-repeat="option in markerAttribute.attribute.options" 
-		                	ng-click="markerAttribute.selectedAttribute = option">
-			            	<input id="role-adminstrator" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id" />
-			            	{{ option.description }}
-		                </label>
-		            </div>
-		            
+                
+                    
+                    <!-- MULTIPLE_CHOICE -->
+                    <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
+                      <div ng-repeat="option in markerAttribute.attribute.options" ng-click="markerAttribute.selectedAttribute = option">
+                        <div class="radio" style="margin: 0">
+                          <input type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id">
+                          <label class="radio-label"> {{ option.description }} </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- NUMBER -->
                     <input
                         type="number"
                         name="number1"
@@ -366,6 +396,7 @@ uri="http://www.springframework.org/security/tags"%>
                         ng-required="markerAttribute.attribute.required"
                         >
 
+                    <!-- DATE -->
                     <input
                         name="date1"
                         ng-if="markerAttribute.attribute.type == 'DATE'"
@@ -375,6 +406,7 @@ uri="http://www.springframework.org/security/tags"%>
                         ng-required="markerAttribute.attribute.required"
                         >
 
+                    <!-- BOOLEAN     -->
                     <div ng-if="markerAttribute.attribute.type == 'BOOLEAN'" ng-required="markerAttribute.attribute.required">
 
                         <div class="required-boolean" >
@@ -397,6 +429,7 @@ uri="http://www.springframework.org/security/tags"%>
 
                     </div>
 
+                    <!-- TEXT -->
                     <input type="text"
                            ng-if="markerAttribute.attribute.type == 'TEXT'" name="texto"
                            class="form-control" ng-model="markerAttribute.value"
@@ -677,15 +710,27 @@ uri="http://www.springframework.org/security/tags"%>
                            name="number1" ng-if="attribute.type == 'NUMBER'"
                            class="form-control" ng-model="attribute.value"
                            ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
-                           ng-required="attribute.required"
-                        >
-                        
-		            <div  ng-if="attribute.type == 'MULTIPLE_CHOICE'">
-		                <label class="radio-label" ng-repeat="option in attribute.options">
-			            	<input id="role-adminstrator" type="radio" ng-value="option" ng-model="attribute.selectAttribute" />
-			            	{{ option.description }}
-		                </label>
-		            </div>
+                           ng-required="attribute.required">
+                           
+                    <!-- 
+                      Antiga forma
+                      <div ng-if="attribute.type == 'MULTIPLE_CHOICE'">
+                        <label class="radio-label" ng-repeat="option in attribute.options">
+                        <input type="radio" ng-value="option" ng-model="attribute.selectedAttribute" />
+                        {{ option.description }}
+                        </label>
+                    </div> -->
+
+                    <!-- MULTIPLE_CHOICE -->
+                    <div  ng-if="attribute.type == 'MULTIPLE_CHOICE'">
+                      <div ng-repeat="option in attribute.options" ng-click="attribute.selectedAttribute = option">
+                        <div class="radio" style="margin: 0">
+                          <input type="radio" ng-checked="attribute.selectedAttribute.id == option.id">
+                          <label class="radio-label"> {{ option.description }} </label>
+                        </div>
+                      </div>
+                    </div>
+
                     <input
                         name="date1" ng-if="attribute.type == 'DATE'"
                         class="form-control datepicker" ng-model="attribute.value"
@@ -976,7 +1021,8 @@ uri="http://www.springframework.org/security/tags"%>
               <br/>
               <div style="overflow-y: auto;position: absolute;top: 250px;bottom: 0px;left: 20px;right: 0px;">
                 <div ng-repeat="search in currentCustomSearch.layerFields" style="width: 90%;">
-                  <input ng-if="search.type != 'BOOLEAN'" id="item_{{$index}}" placeholder="{{search.label ? search.label : search.name}}" ng-class="{datepicker: search.type == 'DATE' }" type="text" class="form-control" maxlength="40">
+
+                  <input ng-if="search.type != 'BOOLEAN' && search.type != 'MULTIPLE_CHOICE'" id="item_{{$index}}" placeholder="{{search.label ? search.label : search.name}}" ng-class="{datepicker: search.type == 'DATE' }" type="text" class="form-control" maxlength="40">
 
                   <div ng-if="search.type == 'BOOLEAN'"  >
                     <label>{{search.label ? search.label : search.name}}</label></br>
@@ -987,6 +1033,19 @@ uri="http://www.springframework.org/security/tags"%>
                            value="No"  /><spring:message code="map.No" />
 
                   </div>
+
+                  <div ng-if="search.type == 'MULTIPLE_CHOICE'"  >
+                      <label>{{search.label ? search.label : search.name}}</label></br>
+                      <div ng-repeat="option in search.attribute.options" 
+                          ng-click="search.selectedAttribute = search.selectedAttribute.id != option.id  ? option : {}">
+                          <div class="radio" style="margin: 0">
+                              <input type="radio" ng-checked="search.selectedAttribute.id == option.id">
+                              <label class="radio-label"> {{ option.description }} </label>
+                          </div>
+                      </div>
+                  </div>
+
+
                   <!--                                     <div class="form-group" ng-if="search.type == 'DATETIME'"> -->
                   <!--                                         <label>{{ search.label ? search.label : search.name }}</label> -->
                   <!--                                         <div class="input-group input-daterange" id="item_{{$index}}" date-picker> -->

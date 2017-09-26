@@ -73,7 +73,7 @@
 
     </div>
 
-    <div ng-grid="gridOptions" style="height: 499px;border: 1px solid rgb(212,212,212);"></div>
+    <div ng-grid="gridOptions" style="height: 500px;border: 1px solid rgb(212,212,212);"></div>
 
     <div class="gridFooterDiv">
       <pagination style="text-align: center; margin-top:45px"

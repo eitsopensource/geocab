@@ -911,6 +911,8 @@ public class LayerGroupService
 					layerField.setType(LayerFieldType.INT);
 				} else if(attr.getType() == AttributeType.BOOLEAN){
 					layerField.setType(LayerFieldType.BOOLEAN);
+				} else if (attr.getType() == AttributeType.MULTIPLE_CHOICE) {
+					layerField.setType(LayerFieldType.MULTIPLE_CHOICE);
 				}
 				
 				layerFields.add(layerField);
@@ -1013,12 +1015,13 @@ public class LayerGroupService
 	
 		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
 		{
-			layers = this.layerRepository.listByFilters(filter, dataSourceId, pageable); //TODO porque o dataSourceId esta entrnando null?
+			layers = this.layerRepository.listByFilters(filter, dataSourceId, pageable); 
+			//TODO porque o dataSourceId esta entrnando null?
 		} else 
 		{
-			layers = this.layerRepository.listByFiltersAndByUser(filter, dataSourceId, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
+			layers = this.layerRepository.listByFiltersAndByUser(filter, dataSourceId, user.getId(), pageable); 
+			//TODO porque o dataSourceId esta entrnando null?
 		}
-		
 		
 		for ( Layer layer : layers.getContent() )
 		{
@@ -1046,10 +1049,12 @@ public class LayerGroupService
 		
 		if (user.getRole().equals(UserRole.ADMINISTRATOR)) 
 		{
-			layers = this.layerRepository.listByFilters(filter, null, pageable); //TODO porque o dataSourceId esta entrnando null?
+			layers = this.layerRepository.listByFilters(filter, null, pageable);
+			//TODO porque o dataSourceId esta entrnando null?
 		} else 
 		{
-			layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable); //TODO porque o dataSourceId esta entrnando null?
+			layers = this.layerRepository.listByFiltersAndByUser(filter, null, user.getId(), pageable); 
+			//TODO porque o dataSourceId esta entrnando null?
 		}
 
 		for ( Layer layer : layers.getContent() )

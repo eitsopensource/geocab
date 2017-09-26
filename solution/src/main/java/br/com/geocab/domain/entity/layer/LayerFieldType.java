@@ -31,7 +31,8 @@ public enum LayerFieldType
 	DOUBLE,
 	DATETIME,
 	DATE,
-	BOOLEAN;
+	BOOLEAN,
+	MULTIPLE_CHOICE;
 	
 	/**
 	 *

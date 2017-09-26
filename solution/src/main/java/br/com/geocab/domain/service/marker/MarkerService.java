@@ -44,6 +44,8 @@ import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.MetaFile;
 import br.com.geocab.domain.entity.configuration.account.User;
 import br.com.geocab.domain.entity.configuration.account.UserRole;
+import br.com.geocab.domain.entity.layer.Attribute;
+import br.com.geocab.domain.entity.layer.AttributeOption;
 import br.com.geocab.domain.entity.layer.AttributeType;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
@@ -541,6 +543,16 @@ public class MarkerService extends AbstractMarkerService
 		return markerAttributes;
 	}
 	
+	
+	/**
+	 * 
+	 * @param attributeId
+	 * @return
+	 */
+	public List<AttributeOption> listOptionByAttributeId( long attributeId )
+	{
+		return this.attributeOptionRepository.listByAttributeId(attributeId);
+	}
 	/**
 	 * 
 	 * @param layer

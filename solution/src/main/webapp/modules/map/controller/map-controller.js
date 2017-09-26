@@ -2651,6 +2651,29 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
   $scope.selectCustomSearch = function (customSearch) {
     $scope.currentCustomSearch = customSearch;
 
+
+    angular.forEach($scope.currentCustomSearch.layerFields, function( layerField, key) {
+      
+      if (layerField.type == 'MULTIPLE_CHOICE'){
+        
+        markerService.listOptionByAttributeId( layerField.attributeId, {
+          callback: function (result) {
+            layerField.attribute = {
+              id: layerField.attributeId,
+              options : result
+            };
+          },
+          errorHandler: function (message, exception) {
+            layerField.attribute = {}
+          }
+
+        });
+      }
+    
+    });
+
+
+
     $timeout(function () {
       $('.datepicker').datepicker({
         dateFormat: 'dd/mm/yy',
@@ -2736,10 +2759,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
         var fields = $scope.currentCustomSearch.layerFields;
 
         for (var field in fields) {
+
           if ($scope.currentCustomSearch.layerFields[field].type == 'BOOLEAN') {
+
             $scope.currentCustomSearch.layerFields[field].value = $($scope.isChecked()).val();
-          } else
+
+          } else if ($scope.currentCustomSearch.layerFields[field].type == 'MULTIPLE_CHOICE'){
+
+            $scope.currentCustomSearch.layerFields[field].value =  
+              $scope.currentCustomSearch.layerFields[field].selectedAttribute ? 
+              $scope.currentCustomSearch.layerFields[field].selectedAttribute.id : null;
+
+          } else {
             $scope.currentCustomSearch.layerFields[field].value = $("#item_" + field).val();
+          }
         }
 
         customSearchService.listMarkerByLayerFilters($scope.currentCustomSearch.layer.id, $scope.currentCustomSearch.layerFields, {
@@ -2771,9 +2804,20 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
                   angular.forEach(result.markerAttribute, function (markerAttribute, index) {
 
                     if (field.attributeId == markerAttribute.attribute.id && $scope.canRemoveMarker != true) {
+
                       enter = true;
 
-                      if (field.value != "" && field.value != undefined) {
+                      if(field.type == 'MULTIPLE_CHOICE'){
+
+                        if (markerAttribute.selectedAttribute.id == field.value){
+                          $scope.canRemoveMarker = false;
+                        } else {
+                          $scope.canRemoveMarker = true;
+                        }
+                        
+                        
+                      }  else if (field.value != "" && field.value != undefined) {
+
                         if (markerAttribute.value.toUpperCase().indexOf(field.value.toUpperCase()) != -1) {
                           $scope.canRemoveMarker = false;
                         } else {
@@ -2787,7 +2831,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
                   //Se caso o valor não for processado dentro do foreach acima, e caso esse valor campo não esteja vazio, deve-se remover o marcador do mapa.
                   //Case the value isn't processed inside the foreach above, and case this value isn't empty, so the marker need to be removed of the map.
-                  if (!enter && (field.value != "" && field.value != undefined)) {
+                  if (!enter && ((field.value != "" && field.value != undefined) && !field.selectedAttribute )) {
                     $scope.canRemoveMarker = true;
                   }
 
@@ -3784,10 +3828,9 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
 
       var markerAttribute = new MarkerAttribute();
 
-      if (val.type == "MULTIPLE_CHOICE" && val.selectAttribute != null) {
-        markerAttribute.selectedAttribute = val.selectAttribute;
-      }
-      else {
+      if (val.type == "MULTIPLE_CHOICE" && val.selectedAttribute != null) {
+        markerAttribute.selectedAttribute = val.selectedAttribute;
+      } else {
         if (val.value != "" && val.value != undefined) {
           markerAttribute.value = val.value;
         } else {

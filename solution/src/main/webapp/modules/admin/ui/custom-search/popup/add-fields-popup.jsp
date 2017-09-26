@@ -25,10 +25,6 @@
         <div ng-show="showLoading" class="grid-loading"></div>
         <div ng-grid="gridOptions" style="height: 335px; border: 1px solid rgb(212,212,212); margin-top: 10px;"></div>
 
-        <div style="float: right; margin-top: 10px; color: darkgray; font-size: 14px;" ng-show="layers.length > 0">
-            {{fields.length}} <spring:message code="admin.custom-search.Itens"/>
-        </div>
-
     </div>
 
 
