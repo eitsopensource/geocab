@@ -1178,10 +1178,12 @@ public class LayerGroupService
 			
 			attributeToUpdate = this.attributeRepository.save( attributeToUpdate );
 			
+			boolean found = false;
 			for ( Attribute currentAttribute : currentSavedAttributes ) 
 			{
-				if ( attributeToUpdate.getId() == currentAttribute.getId() )
+				if (  attributeToUpdate.getId().equals(currentAttribute.getId()) )
 				{
+					found = true;
 					if ( attributeToUpdate.getType().equals(AttributeType.MULTIPLE_CHOICE) )
 					{
 						//Devemos verificar os options do attributo
@@ -1201,20 +1203,29 @@ public class LayerGroupService
 							}
 						}
 						//Apagamos todos os removidos, agora devemos inserir/alterar os do front
+						
 						this.attributeOptionRepository.save(attributesOptionToUpdate );
 					}
+					break;
+				}
+				
+			}
+			
+			if ( !found )
+			{
+				//É um attributo novo, devemos verificar se é multiple choice e inserir as opções
+				for (AttributeOption attributeOption : attributesOptionToUpdate) 
+				{
+					attributeOption.setAttribute( attributeToUpdate );
+					this.attributeOptionRepository.save( attributeOption );
 				}
 			}
 			
-			
 		}
-		
 		
 		layer = this.layerRepository.save( layer );
 		
 		return layer;
-		
-
 	}
 	
 	/**
