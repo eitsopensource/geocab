@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 import br.com.geocab.application.security.ContextHolder;
 import br.com.geocab.domain.entity.accessgroup.AccessGroup;
@@ -25,8 +31,10 @@ import br.com.geocab.domain.entity.configuration.account.UserRole;
 import br.com.geocab.domain.entity.layer.CustomSearch;
 import br.com.geocab.domain.entity.layer.Layer;
 import br.com.geocab.domain.entity.layer.LayerField;
+import br.com.geocab.domain.entity.layer.LayerFieldType;
 import br.com.geocab.domain.entity.marker.Marker;
 import br.com.geocab.domain.entity.marker.MarkerAttribute;
+import br.com.geocab.domain.entity.marker.MarkerStatus;
 import br.com.geocab.domain.repository.ILayerFieldRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupCustomSearchRepository;
 import br.com.geocab.domain.repository.accessgroup.IAccessGroupRepository;
@@ -110,6 +118,12 @@ public class CustomSearchService
 	 */
 	@Autowired
 	ILayerRepository layerRepository;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private EntityManager entityManager;
 
 	/*-------------------------------------------------------------------
 	 *				 		    BEHAVIORS
@@ -389,39 +403,12 @@ public class CustomSearchService
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<Marker> listMarkerByLayerFilters(Long layerId,
-			List<LayerField> layerFields)
-	{
-
-		final User user = ContextHolder.getAuthenticatedUser();
-
-		List<Marker> listMarker = null;
-
-		if (!user.equals(User.ANONYMOUS))
-		{
-
-			if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE)
-					|| user.getRole().name().equals(UserRole.MODERATOR_VALUE))
-			{
-				listMarker = this.markerRepository
-						.listMarkerByLayerAll(layerId);
-			}
-			else
-			{
-				listMarker = this.markerRepository.listMarkerByLayer(layerId,
-						user.getId());
-			}
-
-		}
-		else
-		{
-			listMarker = this.markerRepository.listMarkerByLayerPublic(layerId);
-		}
-		// Pega os markerAttributes do banco (Isso foi feito para não deixar a
-		// requisição pesada)
-		List<MarkerAttribute> markersAttribute = new ArrayList<>();
+	public List<Marker> listMarkerByLayerFilters(Long layerId, List<LayerField> layerFields)
+	{	
+		
 		// Variável auxiliar para verificar se há algum valor nas pesquisas
 		boolean hasSearch = false;
+		
 		// Verifica se há algum valor na pesquisa
 		for (LayerField layerField : layerFields)
 		{
@@ -435,62 +422,91 @@ public class CustomSearchService
 
 		if (hasSearch)
 		{
-			for (LayerField layerField : layerFields)
+			
+			String hql = 
+					"SELECT new Marker( marker.id, marker.status, marker.location, marker.layer, marker.created, marker.user ) "
+					+ "FROM Marker marker "
+					+ "LEFT JOIN marker.markerAttributes markerAttribute "
+					+ "WHERE "
+						+ "(marker.deleted IS NULL or marker.deleted = 'FALSE') AND  ";
+			
+			final String subQuery = "marker.id IN "
+					+"( SELECT marker1.id "
+					+ "FROM Marker marker1 "
+					+ "LEFT JOIN marker1.markerAttributes markerAttributes1 "
+					+ "WHERE ";
+					
+
+			final String endSubselect = ")";	
+			
+			
+			String subQueries = "";
+			
+			boolean firstLayerField = true;
+			for (LayerField layerField : layerFields) 
 			{
-				if (layerField.getValue() != null
-						&& layerField.getValue().length() > 0)
+				if ( layerField.getValue() != null && !layerField.getValue().isEmpty() )
 				{
+					if ( !firstLayerField ) 
+					{
+						subQueries += " AND ";
+					}
 					
-	
+					if( layerField.getType() == LayerFieldType.MULTIPLE_CHOICE ) 
+					{
+						subQueries += subQuery + " markerAttributes1.selectedAttribute.id = " + layerField.getValue();
+					} 
+					else 
+					{
+						subQueries += subQuery + "  LOWER(markerAttributes1.value) LIKE '%' || LOWER('" + layerField.getValue() + "') || '%'";
+					}
 					
-					markersAttribute.addAll(this.markerAttributeRepository
-							.listMarkerAttributeByAttributeIdAndFilters(
-									layerField.getAttributeId(),
-									layerField.getName(), layerField.getValue(),
-									this.attributeRepository
-											.findById(
-													layerField.getAttributeId())
-											.getType()));
+					subQueries += " AND markerAttributes1.attribute.id = " + layerField.getAttributeId() + endSubselect;
 					
-					System.out.println("type: " + this.attributeRepository.findById(layerField.getAttributeId()).getType());
-					System.out.println("AttributeId: " + layerField.getAttributeId());
-					System.out.println("name "  +layerField.getName());
-					System.out.println("value: " + layerField.getValue());
-					System.out.println("achou: " + markersAttribute.size());
-					
+					firstLayerField = false;
 				}
+				
 			}
+			
+			
+			hql += subQueries;
+			
+			final Query query = this.entityManager.createQuery( hql );
+			
+			final List<Marker> markers = query.getResultList();
+						
+			return markers;
+
+		
 		}
 		else
 		{
+			
+			final User user = ContextHolder.getAuthenticatedUser();
+			
+			List<Marker> listMarker = null;
+
+			if (!user.equals(User.ANONYMOUS))
+			{
+
+				if (user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE))
+				{
+					listMarker = this.markerRepository.listMarkerByLayerAll(layerId);
+				}
+				else
+				{
+					listMarker = this.markerRepository.listMarkerByLayer(layerId,  user.getId());
+				}
+
+			}
+			else
+			{
+				listMarker = this.markerRepository.listMarkerByLayerPublic(layerId);
+			}
+			
 			return listMarker;
 		}
 
-		for (MarkerAttribute markerAttribute : markersAttribute)
-		{
-			for (Marker marker : listMarker)
-			{
-				if (markerAttribute.getMarker().getId() == marker.getId())
-				{
-					markerAttribute.setMarker(marker);
-				}
-			}
-		}
 
-		// Popula a lista de markers com os markers attributos (Isso foi feito
-		// para não deixar a requisição pesada)
-		List<Marker> markersReturn = new ArrayList<>();
-		for (MarkerAttribute markerAttribute : markersAttribute)
-		{
-			Marker marker = markerAttribute.getMarker();
-			// Instancia lista de markerAttributes dentro do marker
-			marker.setMarkerAttribute(new ArrayList<MarkerAttribute>());
-			// Adiciona o markerAttribute
-			marker.getMarkerAttribute().add(markerAttribute);
-			// Adiciona o o marker na lista de retorno
-			markersReturn.add(marker);
-		}
-
-		return markersReturn;
 	}
 }

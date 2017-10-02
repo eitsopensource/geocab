@@ -59,20 +59,30 @@ public interface IMarkerAttributeRepository  extends IDataRepository<MarkerAttri
 	 * @param type
 	 * @return
 	 */
-//	@Query(value="SELECT new MarkerAttribute(  markerAttribute.id, markerAttribute.value, markerAttribute.selectedAttribute, "
 	@Query(value="SELECT new MarkerAttribute(  markerAttribute.id, markerAttribute.value, "
+			+ "selectedAttribute, "
 			+ "attribute.id, "
 			+ "marker.id, marker.location, marker.status, marker.deleted, marker.user, "
 			+ "layer.id, layer.name, layer.title, layer.icon, layer.startEnabled, layer.startVisible, layer.orderLayer, layer.minimumScaleMap, layer.maximumScaleMap, layer.enabled, layer.dataSource, layer.publishedLayer.id ) " +
 				 " FROM MarkerAttribute markerAttribute "+  
 				 " LEFT OUTER JOIN markerAttribute.marker marker " +
+				 " LEFT OUTER JOIN markerAttribute.selectedAttribute selectedAttribute " +
 				 " LEFT OUTER JOIN markerAttribute.marker.layer layer " + 
 				 " LEFT OUTER JOIN markerAttribute.attribute attribute " + 
-				 " WHERE ((attribute.id = :attributeId) "
-				 + "AND ( LOWER(markerAttribute.value) LIKE '%' || LOWER(CAST(:value AS string))  || '%' OR :value IS NULL )  "
-//				 + "AND ( (LOWER(markerAttribute.value) LIKE '%' || LOWER(CAST(:value AS string))  || '%') OR "
-//				 	+ "( (:value IS NOT NULL) AND CAST(markerAttribute.selectedAttribute.id AS string) = :value ) OR"
-//				 	+ " (:value IS NULL) )  "
+				 " WHERE ((attribute.id = :attributeId) AND (marker.deleted IS NULL or marker.deleted = 'FALSE')  "
+				 + "AND ("
+				 	+ "(:value IS NULL) "
+				 	+ "OR"
+				 	+ "( "
+						+ "("
+							+ "(LOWER(markerAttribute.value) LIKE '%' || LOWER(CAST(:value AS string))  || '%')  "
+						 	+ "AND"
+						 	+ "(LOWER(markerAttribute.value) LIKE '%' || LOWER(CAST(:value AS string))  || '%') "
+					 	+ ") "
+					 	+ " OR "
+					 	+ "( CAST(markerAttribute.selectedAttribute.id AS string) = :value )"
+				 	+ ")"
+				 + "  )  "
 				 + "AND ( LOWER(markerAttribute.attribute.name) LIKE '%' || LOWER(CAST(:name AS string))  || '%' OR :name IS NULL )  "
 				 + "AND ((markerAttribute.attribute.type = :type) OR :type IS NULL))")
 	public List<MarkerAttribute> listMarkerAttributeByAttributeIdAndFilters( @Param("attributeId") Long attributeId,

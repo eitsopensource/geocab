@@ -112,19 +112,19 @@ public class MarkerAttribute extends AbstractEntity implements Serializable
 		this.setAttribute(attribute);
 	}
 	/**
-	 * AttributeOption selectedAttribute, 
+	 * 
 	 * @param id
 	 * @param value
 	 * @param marker
 	 * @param attribute
 	 */
-	public MarkerAttribute(Long id, String value, Long attributeId, Long markerId, Geometry location, MarkerStatus markerStatus, Boolean markerDeleted, User user, 
+	public MarkerAttribute(Long id, String value, AttributeOption selectedAttribute, Long attributeId, Long markerId, Geometry location, MarkerStatus markerStatus, Boolean markerDeleted, User user, 
 			Long layerId, String layerName, String layerTitle, String layerIcon, Boolean startEnabled, Boolean startVisible, Integer orderLayer, MapScale minimumMapScale, MapScale maximumMapScale, Boolean enabled, DataSource dataSource, Long publishedLayerId)
 	{
 		
 		this.setId(id);
 		this.setValue(value);
-//		this.setSelectedAttribute(selectedAttribute);
+		this.setSelectedAttribute(selectedAttribute);
 		this.setMarker(new Marker(markerId, location, markerStatus, markerDeleted, user));
 		this.getMarker().setLayer(new Layer(layerId, layerName, layerTitle, layerIcon, startEnabled, startVisible, orderLayer, minimumMapScale, maximumMapScale, enabled, dataSource, publishedLayerId));
 		this.setAttribute(new Attribute(attributeId));
