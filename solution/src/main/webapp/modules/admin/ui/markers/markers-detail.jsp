@@ -89,15 +89,30 @@
                                     ng-class="{ngInvalid: ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
                                     ng-required="markerAttribute.attribute.required"
                                 >
-                                 
+                                
                                 <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
-                                    <div ng-repeat="option in markerAttribute.attribute.options" 
-                                        ng-click="markerAttribute.selectedAttribute = (currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED') ? option : markerAttribute.selectedAttribute">
-                                        <div class="radio" style="margin: 0">
-                                            <input type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id">
-                                            <label class="radio-label"> {{ option.description }} </label>
+
+                                    <div ng-if="(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED')">
+                                        <div ng-repeat="option in markerAttribute.attribute.options" 
+                                            ng-click="markerAttribute.selectedAttribute = markerAttribute.selectedAttribute.id != option.id  ? option : null">
+                                        
+                                            <div class="radio" style="margin: 0">
+                                                <input type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id">
+                                                <label class="radio-label"> {{ option.description }} </label>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <div ng-if="!(currentEntity.status == 'SAVED' || currentEntity.status == 'REFUSED')">
+                                        <div ng-repeat="option in markerAttribute.attribute.options">
+                                            <div class="radio" style="margin: 0">
+                                                <input type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id">
+                                                <label class="radio-label"> {{ option.description }} </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                 </div>
 
                                 <input

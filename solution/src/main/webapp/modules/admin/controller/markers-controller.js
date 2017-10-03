@@ -1534,7 +1534,11 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
-                $scope.msg = {type: "danger", text: $translate(message)};
+                var translatedMessage =  $translate(message);
+                if(!translatedMessage){
+                    translatedMessage = message;
+                }
+                $scope.msg = {type: "danger", text: translatedMessage};
                 $scope.fadeMsg();
                 $scope.$apply();
             }
@@ -1639,8 +1643,11 @@ ront controller of angle won't let enter an invalid URL.
             errorHandler: function (message, exception) {
 
                 $scope.isPostMarker = false;
-
-                $scope.msg = {type: "danger", text: $translate(message)};
+                var translatedMessage =  $translate(message);
+                if(!translatedMessage){
+                    translatedMessage = message;
+                }
+                $scope.msg = {type: "danger", text: translatedMessage};
                 $scope.fadeMsg();
                 $scope.$apply();
 
@@ -1668,6 +1675,7 @@ ront controller of angle won't let enter an invalid URL.
                 $scope.$apply();
             },
             errorHandler: function (message, exception) {
+                
                 $scope.msg = {type: "danger", text: $translate(message)};
                 $scope.fadeMsg();
                 $scope.$apply();
@@ -2004,7 +2012,11 @@ ront controller of angle won't let enter an invalid URL.
             errorHandler: function (message, exception) {
                 $scope.isPostMarker = false;
 
-                $scope.msg = {type: "danger", text: $translate(message)};
+                var translatedMessage =  $translate(message);
+                if(!translatedMessage){
+                    translatedMessage = message;
+                }
+                $scope.msg = {type: "danger", text: translatedMessage};
                 $scope.fadeMsg();
                 $scope.$apply();
             }

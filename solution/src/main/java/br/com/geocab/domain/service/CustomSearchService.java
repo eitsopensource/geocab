@@ -406,14 +406,14 @@ public class CustomSearchService
 	public List<Marker> listMarkerByLayerFilters(Long layerId, List<LayerField> layerFields)
 	{	
 		
+		final User user = ContextHolder.getAuthenticatedUser();
+		
 		// Variável auxiliar para verificar se há algum valor nas pesquisas
 		boolean hasSearch = false;
-		
 		// Verifica se há algum valor na pesquisa
 		for (LayerField layerField : layerFields)
 		{
-			if (layerField.getValue() != null
-					&& layerField.getValue().length() > 0)
+			if (layerField.getValue() != null && layerField.getValue().length() > 0)
 			{
 				hasSearch = true;
 				break;
@@ -423,12 +423,31 @@ public class CustomSearchService
 		if (hasSearch)
 		{
 			
+			String userRoleClause = "";
+			
+			if ( !(user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) )
+			{
+
+				if (user.getRole().name().equals(UserRole.USER_VALUE))
+				{
+					userRoleClause = " (marker.user.id = " + user.getId() + ") OR ";
+				}
+				
+				userRoleClause += "( marker.status = 1 )  ";
+				
+			}
+	
+			
 			String hql = 
 					"SELECT new Marker( marker.id, marker.status, marker.location, marker.layer, marker.created, marker.user ) "
 					+ "FROM Marker marker "
 					+ "LEFT JOIN marker.markerAttributes markerAttribute "
 					+ "WHERE "
-						+ "(marker.deleted IS NULL or marker.deleted = 'FALSE') AND  ";
+						+ "(marker.deleted IS NULL or marker.deleted = 'FALSE') AND ";
+			
+			if (!userRoleClause.isEmpty()) {
+				hql += "(" + userRoleClause + ") AND ";
+			}
 			
 			final String subQuery = "marker.id IN "
 					+"( SELECT marker1.id "
@@ -482,8 +501,7 @@ public class CustomSearchService
 		else
 		{
 			
-			final User user = ContextHolder.getAuthenticatedUser();
-			
+	
 			List<Marker> listMarker = null;
 
 			if (!user.equals(User.ANONYMOUS))

@@ -71,15 +71,17 @@
                         >
                         
                         <!-- MULTIPLE_CHOICE -->
-                        <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'  &&  markerAttribute.selectedAttribute && markerAttribute.selectedAttribute.description">
-                            <label>{{markerAttribute.attribute.name}}</label>
+                        <div ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'  &&  markerAttribute.selectedAttribute && markerAttribute.selectedAttribute.description">                            
+                        <label>{{markerAttribute.attribute.name}}</label>
+                        <div ng-repeat="option in markerAttribute.attribute.options">
                             <div class="radio" style="margin: 0">
-                              <input ng-disabled="true" type="radio" ng-checked="true">
-                              <label class="radio-label"> {{ markerAttribute.selectedAttribute.description }} </label>
+                                <input  type="radio" ng-disabled ng-checked="markerAttribute.selectedAttribute.id == option.id">
+                                <label class="radio-label"> {{ option.description }} </label>
+                                </div>
                             </div>
                         </div>
 
-
+                        <!-- BOOLEAN -->
                         <div ng-if="markerAttribute.attribute.type == 'BOOLEAN' && !markerAttribute.value == ''">
                             <input
                                     ng-disabled="true" type="radio"
@@ -98,6 +100,8 @@
                             <spring:message code="map.No"/>
                         </div>
 
+                        
+                         <!-- TEXT -->
                         <div
                                 ng-if="markerAttribute.attribute.type == 'TEXT' && !markerAttribute.value == ''"
                                 name="texto"

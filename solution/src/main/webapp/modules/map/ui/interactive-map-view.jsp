@@ -193,34 +193,17 @@ uri="http://www.springframework.org/security/tags"%>
                               class="form-control" ng-model="markerAttribute.value"
                               required ng-disabled="true">
                           
-                              
-                              <!-- <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE------'">
-                                <label>{{markerAttribute.attribute.name}}</label>
-                                <label class="radio-label" ng-repeat="option in markerAttribute.attribute.options">
-                                  
-                                  <input ng-disabled="true" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id" />
-                                  
-                                  {{ option.description }}
-                                  
-                                </label>
-                              </div>
-                               -->
+                  
                                
                           <!-- MULTIPLE_CHOICE -->  
-                          <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'  &&  markerAttribute.selectedAttribute && markerAttribute.selectedAttribute.description">
-                              <label>{{markerAttribute.attribute.name}}</label>
-
+                          <div ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'  &&  markerAttribute.selectedAttribute && markerAttribute.selectedAttribute.description">                            
+                            <label>{{markerAttribute.attribute.name}}</label>
+                            <div ng-repeat="option in markerAttribute.attribute.options">
                               <div class="radio" style="margin: 0">
-                                <input ng-disabled="true" type="radio" ng-checked="true">
-                                <label class="radio-label"> {{ markerAttribute.selectedAttribute.description }} </label>
+                                <input  type="radio" ng-disabled ng-checked="markerAttribute.selectedAttribute.id == option.id">
+                                <label class="radio-label"> {{ option.description }} </label>
                               </div>
-                              
-                              <!-- <div ng-repeat="option in markerAttribute.attribute.options">
-                                <div class="radio" style="margin: 0">
-                                  <input ng-disabled="true" type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id">
-                                  <label class="radio-label"> {{ option.description }} </label>
-                                </div>
-                              </div> -->
+                            </div>
                           </div>
 
                           <!-- DATE -->
@@ -367,7 +350,6 @@ uri="http://www.springframework.org/security/tags"%>
                             title="<spring:message code='map.Picture'/>"><span class="glyphicon glyphicon-picture"></span>
                     </button>
 
-                    <!--<label style="padding-top: 10px">{{ markerAttribute.attribute.name }}</label>-->
 
                     <label ng-if="markerAttribute.attribute.type != 'PHOTO_ALBUM'" style="margin-top: 10px">{{ markerAttribute.attribute.name }}</label>
 
@@ -376,7 +358,8 @@ uri="http://www.springframework.org/security/tags"%>
                     
                     <!-- MULTIPLE_CHOICE -->
                     <div  ng-if="markerAttribute.attribute.type == 'MULTIPLE_CHOICE'">
-                      <div ng-repeat="option in markerAttribute.attribute.options" ng-click="markerAttribute.selectedAttribute = option">
+                      <div ng-repeat="option in markerAttribute.attribute.options" 
+                          ng-click="markerAttribute.selectedAttribute = markerAttribute.selectedAttribute.id != option.id  ? option : null">
                         <div class="radio" style="margin: 0">
                           <input type="radio" ng-checked="markerAttribute.selectedAttribute.id == option.id">
                           <label class="radio-label"> {{ option.description }} </label>
@@ -711,19 +694,12 @@ uri="http://www.springframework.org/security/tags"%>
                            class="form-control" ng-model="attribute.value"
                            ng-class="{ngInvalid:ngSideMarker.$submitted && ngSideMarker.number1.$error.required}"
                            ng-required="attribute.required">
-                           
-                    <!-- 
-                      Antiga forma
-                      <div ng-if="attribute.type == 'MULTIPLE_CHOICE'">
-                        <label class="radio-label" ng-repeat="option in attribute.options">
-                        <input type="radio" ng-value="option" ng-model="attribute.selectedAttribute" />
-                        {{ option.description }}
-                        </label>
-                    </div> -->
+
 
                     <!-- MULTIPLE_CHOICE -->
                     <div  ng-if="attribute.type == 'MULTIPLE_CHOICE'">
-                      <div ng-repeat="option in attribute.options" ng-click="attribute.selectedAttribute = option">
+                      <div ng-repeat="option in attribute.options" 
+                            ng-click="attribute.selectedAttribute = attribute.selectedAttribute.id != option.id  ? option : null">
                         <div class="radio" style="margin: 0">
                           <input type="radio" ng-checked="attribute.selectedAttribute.id == option.id">
                           <label class="radio-label"> {{ option.description }} </label>
@@ -1037,7 +1013,7 @@ uri="http://www.springframework.org/security/tags"%>
                   <div ng-if="search.type == 'MULTIPLE_CHOICE'"  >
                       <label>{{search.label ? search.label : search.name}}</label></br>
                       <div ng-repeat="option in search.attribute.options" 
-                          ng-click="search.selectedAttribute = search.selectedAttribute.id != option.id  ? option : {}">
+                          ng-click="search.selectedAttribute = search.selectedAttribute.id != option.id  ? option : null">
                           <div class="radio" style="margin: 0">
                               <input type="radio" ng-checked="search.selectedAttribute.id == option.id">
                               <label class="radio-label"> {{ option.description }} </label>
