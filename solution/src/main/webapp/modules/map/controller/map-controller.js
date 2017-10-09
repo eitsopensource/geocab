@@ -3778,6 +3778,7 @@ function MapController($scope, $injector, $log, $state, $timeout, $modal, $locat
             photo.contentLength = file.size;
             photo.mimeType = file.type;
             photoAlbum.photos.push(photo);
+            photoAlbum.markerAttribute = markerAttribute;
           });
           markerAttribute.photoAlbum = photoAlbum;
         }
