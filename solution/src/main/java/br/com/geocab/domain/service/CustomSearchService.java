@@ -423,27 +423,28 @@ public class CustomSearchService
 		if (hasSearch)
 		{
 			
-			String userRoleClause = "";
-			
-			if ( !(user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) )
-			{
-
-				if (user.getRole().name().equals(UserRole.USER_VALUE))
-				{
-					userRoleClause = " (marker.user.id = " + user.getId() + ") OR ";
-				}
-				
-				userRoleClause += "( marker.status = 1 )  ";
-				
-			}
-	
-			
 			String hql = 
 					"SELECT new Marker( marker.id, marker.status, marker.location, marker.layer, marker.created, marker.user ) "
 					+ "FROM Marker marker "
 					+ "LEFT JOIN marker.markerAttributes markerAttribute "
 					+ "WHERE "
 						+ "(marker.deleted IS NULL or marker.deleted = 'FALSE') AND ";
+			
+			String userRoleClause = "";
+			
+			//Perfis diferentes de ADMINISTRATOR deverão ter um filtro extra na query
+			if ( !(user.getRole().name().equals(UserRole.ADMINISTRATOR_VALUE) || user.getRole().name().equals(UserRole.MODERATOR_VALUE) ) )
+			{
+				//Caso o perfil seja USER, vai adicionar o filtro por id
+				if (user.getRole().name().equals(UserRole.USER_VALUE))
+				{
+					userRoleClause = " (marker.user.id = " + user.getId() + ") OR ";
+				}
+				//Independente do perfil (ANONYMOUS ou USER), será mostrado os aprovados // status 1 = aprovado
+				userRoleClause += "( marker.status = 1 )  ";
+				
+			}
+	
 			
 			if (!userRoleClause.isEmpty()) {
 				hql += "(" + userRoleClause + ") AND ";
@@ -473,6 +474,7 @@ public class CustomSearchService
 					
 					if( layerField.getType() == LayerFieldType.MULTIPLE_CHOICE ) 
 					{
+						//Value contem o ID da opção selecionada quando MULTIPLE_CHOICE
 						subQueries += subQuery + " markerAttributes1.selectedAttribute.id = " + layerField.getValue();
 					} 
 					else 

@@ -12,7 +12,7 @@
 	  <button type="button" class="close" ng-click="close(true)"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>	
 	  <h3 class="modal-title"><spring:message code="photos.Insert-Photos"/></h3>
 	</div>
-	<div class="modal-body" ng-init="initialize();" style="overflow: hidden;max-height: 550px; min-height: 500px;">
+	<div class="modal-body" ng-init="initialize();" style="overflow: hidden;max-height: 500px; min-height: 500px;">
     <div>
       <div class="col-md-9" style="padding: 0">
         <upload-file on-success="onSuccess(files)" on-loading="onLoading(isLoading)" on-error="onError(msg)" attribute="attribute"></upload-file>
