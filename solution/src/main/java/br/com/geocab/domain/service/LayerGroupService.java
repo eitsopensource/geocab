@@ -1101,10 +1101,15 @@ public class LayerGroupService
 			attribute.setLayer(layer);
 			List<AttributeOption> attributeOptions = attribute.getOptions();
 			attribute = this.attributeRepository.save(attribute);
-			for (AttributeOption attributeOption : attributeOptions) {
-				attributeOption.setAttribute(attribute);
-				this.attributeOptionRepository.save(attributeOption);
+			
+			if ( attributeOptions != null && !attributeOptions.isEmpty() ) 
+			{
+				for (AttributeOption attributeOption : attributeOptions) {
+					attributeOption.setAttribute(attribute);
+					this.attributeOptionRepository.save(attributeOption);
+				}				
 			}
+			
 		}
 		
 		layer.setAttributes(attributes);
