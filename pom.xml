@@ -73,7 +73,7 @@
 		<profile>
 			<id>development</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<!-- Database -->	
@@ -197,7 +197,7 @@
 		<profile>
             <id>hom</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
 				<!-- Database -->

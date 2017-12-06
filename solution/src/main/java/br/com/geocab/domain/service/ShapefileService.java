@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -241,6 +243,7 @@ public class ShapefileService
 		{
 			final Map<String, Object> map = new HashMap<String, Object>();
 		    map.put("url", file.toURI().toURL());
+		    map.put("charset",  "UTF-8");
 
 		    final DataStore dataStore = DataStoreFinder.getDataStore(map);
 		    
@@ -407,7 +410,6 @@ public class ShapefileService
 	    			marker.setLocation((Point) targetGeometry);
 	            	
 	    			marker.formattedNameAttributes();
-	    			
 					marker.handlerDuplicateAttributes();
 					
 	            	final GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(null);
@@ -432,6 +434,7 @@ public class ShapefileService
 		        final Map<String, Serializable> create = new HashMap<String, Serializable>();
 		        create.put("url", newFile.toURI().toURL());
 		        create.put("create spatial index", Boolean.TRUE);
+		        create.put("charset",  "UTF-8");
 		        DataStore dataStore = dataStoreFactorySpi.createNewDataStore(create);
 		        SimpleFeatureType featureType = SimpleFeatureTypeBuilder.retype( type, /*CRS.parseWKT(this.wktToGeometry()) */DefaultGeographicCRS.WGS84 );
 		        dataStore.createSchema(featureType);
@@ -502,10 +505,6 @@ public class ShapefileService
 		markerTest = markerRepository.findOne(markerIndex);
 		
 		markerTest.setMarkerAttribute(markerAttributeRepository.listAttributeByMarker(markerTest.getId()));
-		
-		markerTest.formattedNameAttributes();
-		
-		markerTest.handlerDuplicateAttributes();
 		
 		return DataUtilities.createType(layer.getName(), "the_geom:Point,"+markerTest.formattedAttributes());
 	}
@@ -586,7 +585,9 @@ public class ShapefileService
 	 * @return
 	 */
 	private static final SimpleFeature extractFeatures(final SimpleFeature feature, final MarkerAttribute markerAttribute)
-	{		
+	{	
+//		markerAttribute.getAttribute().formmatNameAttribute();
+	
 		final String attribute = markerAttribute.getAttribute().getName();
 		
 		if (markerAttribute.getValue().toLowerCase().trim().equals("yes") || markerAttribute.getValue().toLowerCase().trim().equals("sim") && markerAttribute.getAttribute().getType() == AttributeType.BOOLEAN)
@@ -620,7 +621,7 @@ public class ShapefileService
 			feature.setAttribute( attribute, markerAttribute.getSelectedAttribute().getDescription() );
 		}
 		else
-		{
+		{				
 			feature.setAttribute(attribute, markerAttribute.getValue());
 		}
 		

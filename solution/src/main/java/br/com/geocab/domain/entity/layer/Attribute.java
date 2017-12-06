@@ -4,6 +4,9 @@
 package br.com.geocab.domain.entity.layer;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +16,6 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-
 import org.directwebremoting.annotations.DataTransferObject;
 import org.hibernate.envers.Audited;
 import org.springframework.util.Assert;
@@ -31,8 +33,7 @@ import br.com.geocab.domain.entity.marker.MarkerAttribute;
 @Entity
 @Audited
 @DataTransferObject(javascript = "Attribute")
-public class Attribute extends AbstractEntity implements Serializable
-{
+public class Attribute extends AbstractEntity implements Serializable {
 	/**
 	 * 
 	 */
@@ -82,7 +83,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 */
 	@Column
 	private Integer orderAttribute;
-	
+
 	/**
 	 * Layer {@link Layer}
 	 */
@@ -96,7 +97,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	@JsonIgnore
 	@Transient
 	private List<MarkerAttribute> markerAttribute = new ArrayList<MarkerAttribute>();
-	
+
 	/**
 	 * 
 	 */
@@ -110,8 +111,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * 
 	 */
-	public Attribute()
-	{
+	public Attribute() {
 
 	}
 
@@ -119,8 +119,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * 
 	 * @param id
 	 */
-	public Attribute(Long id)
-	{
+	public Attribute(Long id) {
 		this.setId(id);
 	}
 
@@ -133,9 +132,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param orderAttribute
 	 * @param visible
 	 */
-	public Attribute(Long id, String name, AttributeType type, Boolean required,
-			Integer orderAttribute, Boolean visible)
-	{
+	public Attribute(Long id, String name, AttributeType type, Boolean required, Integer orderAttribute,
+			Boolean visible) {
 		this.setId(id);
 		this.setType(type);
 		this.setName(name);
@@ -148,8 +146,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * 
 	 * @param name
 	 */
-	public Attribute(String name)
-	{
+	public Attribute(String name) {
 		this.setName(name);
 	}
 
@@ -162,8 +159,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param orderAttribute
 	 * @param visible
 	 */
-	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute, Boolean visible)
-	{
+	public Attribute(Long id, String name, Boolean required, AttributeType type, Integer orderAttribute,
+			Boolean visible) {
 		this.setId(id);
 		this.setTemporaryId(id);
 		this.setType(type);
@@ -180,8 +177,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param type
 	 * @param layer
 	 */
-	public Attribute(Long id, String name, AttributeType type, Layer layer)
-	{
+	public Attribute(Long id, String name, AttributeType type, Layer layer) {
 		this.setId(id);
 		this.setType(type);
 		this.setName(name);
@@ -195,8 +191,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param type
 	 * @param layer
 	 */
-	public Attribute(Long id, String name, String type, Layer layer)
-	{
+	public Attribute(Long id, String name, String type, Layer layer) {
 		this.setId(id);
 		this.setType(formmatAttributes(type));
 		this.setName(name);
@@ -207,89 +202,97 @@ public class Attribute extends AbstractEntity implements Serializable
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
 	/**
-	 * Formata os atributos para importaÁ„o
+	 * Formata os atributos para importa√ß√£o
+	 * 
 	 * @return
 	 */
-	public void validate()
-	{
+	public void validate() {
 		Assert.notNull(this.getType(), "admin.layer-config.The-all-fields-type-in-attributes-must-be-set");
 	}
-	
+
 	/**
-	 * Formata os atributos para importaÁ„o
+	 * Formata os atributos para importa√ß√£o
+	 * 
 	 * @return
 	 */
-	public String formmattedTypeAttributes()
-	{
-		if (this.getType() == AttributeType.TEXT || this.getType() == AttributeType.MULTIPLE_CHOICE)
-		{
+	public String formmattedTypeAttributes() {
+		if (this.getType() == AttributeType.TEXT || this.getType() == AttributeType.MULTIPLE_CHOICE) {
 			return "String";
-		}
-		else if (this.getType() == AttributeType.DATE)
-		{
+		} else if (this.getType() == AttributeType.DATE) {
 			return "Date";
-		}
-		else if (this.getType() == AttributeType.BOOLEAN)
-		{
+		} else if (this.getType() == AttributeType.BOOLEAN) {
 			return "Boolean";
-		}
-		else if (this.getType() != AttributeType.PHOTO_ALBUM)
-		{
+		} else if (this.getType() != AttributeType.PHOTO_ALBUM) {
 			return "Integer";
-		}
-		else // Se for do tipo PHOTO_ALBUM retorna null
+		} else // Se for do tipo PHOTO_ALBUM retorna null
 		{
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Formata o nome do atributo para exportaÁ„o (A documentaÁ„o informa que o nome n„o pode ser maior que 15 caracteres)
+	 * Formata o nome do atributo para exporta√ß√£o (A documenta√ß√£o pede que o nome
+	 * n√£o seja maior que 10 caracteres  )
+	 * 
 	 * @param type
 	 * @return
 	 */
-	public void formmatNameAttribute()
-	{
-		if (this.getName().length() >= 10)
-		{
-			this.setName(this.getName().substring(0, 5) + "...");
+	public void formmatNameAttribute() {
+
+		String name = stripAccents(this.getName()).replace(" ", "_") ;
+		
+		if (name.length() >= 10) {
+			name = name.substring(0, 8);
 		}
+		
+		this.setName( name );			
+
+		
 	}
 	
 	/**
-	 * Formata os atributos para exportaÁ„o
+	 * 
+	 * Substitui os caracteres especiais pelos caracteres equivalentes
+	 * Ex: 
+	 * √ß -> c 
+	 * √° -> a
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public static String stripAccents(String s) 
+	{
+	    s = Normalizer.normalize(s, Normalizer.Form.NFD);
+	    s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+	    return s;
+	}
+
+
+	/**
+	 * Formata os atributos para exporta√ß√£o
+	 * 
 	 * @param type
 	 * @return
 	 */
-	private static AttributeType formmatAttributes(String type)
-	{
+	private static AttributeType formmatAttributes(String type) {
 		AttributeType attributeType = null;
-		if (type.contains("java.lang.String"))
-		{
+		if (type.contains("java.lang.String")) {
 			attributeType = AttributeType.TEXT;
-		}
-		else if (type.contains("java.lang.Integer") || type.contains("java.lang.Long"))
-		{
+		} else if (type.contains("java.lang.Integer") || type.contains("java.lang.Long")) {
 			attributeType = AttributeType.NUMBER;
-		}
-		else if (type.contains("java.util.Date"))
-		{
+		} else if (type.contains("java.util.Date")) {
 			attributeType = AttributeType.DATE;
-		}
-		else if (type.contains("java.lang.Boolean"))
-		{
+		} else if (type.contains("java.lang.Boolean")) {
 			attributeType = AttributeType.BOOLEAN;
 		}
 		return attributeType;
 	}
-	
+
 	/**
 	 * @return the required
 	 */
-	public Boolean getRequired()
-	{
-		if (required == null)
-		{
+	public Boolean getRequired() {
+		if (required == null) {
 			required = false;
 		}
 		return required;
@@ -299,22 +302,18 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param required
 	 *            the required to set
 	 */
-	public void setRequired(Boolean required)
-	{
-		if (required == null)
-		{
+	public void setRequired(Boolean required) {
+		if (required == null) {
 			required = false;
 		}
 		this.required = required;
 	}
-	
+
 	/**
 	 * @return the visible
 	 */
-	public Boolean getVisible()
-	{
-		if (visible == null)
-		{
+	public Boolean getVisible() {
+		if (visible == null) {
 			visible = false;
 		}
 		return visible;
@@ -324,16 +323,16 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param visible
 	 *            the visible to set
 	 */
-	public void setVisible(Boolean visible)
-	{
-		if (visible == null)
-		{
+	public void setVisible(Boolean visible) {
+		if (visible == null) {
 			visible = false;
 		}
 		this.visible = visible;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -352,7 +351,9 @@ public class Attribute extends AbstractEntity implements Serializable
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -415,8 +416,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	/**
 	 * @return the name
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -425,16 +425,14 @@ public class Attribute extends AbstractEntity implements Serializable
 	 *            the name to set
 	 * 
 	 */
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
 	 * @return the type
 	 */
-	public AttributeType getType()
-	{
+	public AttributeType getType() {
 		return type;
 	}
 
@@ -442,16 +440,14 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param type
 	 *            the type to set
 	 */
-	public void setType(AttributeType type)
-	{
+	public void setType(AttributeType type) {
 		this.type = type;
 	}
 
 	/**
 	 * @return the layer
 	 */
-	public Layer getLayer()
-	{
+	public Layer getLayer() {
 		return layer;
 	}
 
@@ -459,16 +455,14 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param layer
 	 *            the layer to set
 	 */
-	public void setLayer(Layer layer)
-	{
+	public void setLayer(Layer layer) {
 		this.layer = layer;
 	}
 
 	/**
 	 * @return the attributeDefault
 	 */
-	public Boolean getAttributeDefault()
-	{
+	public Boolean getAttributeDefault() {
 		return attributeDefault;
 	}
 
@@ -476,16 +470,14 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param attributeDefault
 	 *            the attributeDefault to set
 	 */
-	public void setAttributeDefault(Boolean attributeDefault)
-	{
+	public void setAttributeDefault(Boolean attributeDefault) {
 		this.attributeDefault = attributeDefault;
 	}
 
 	/**
 	 * @return the temporaryId
 	 */
-	public Long getTemporaryId()
-	{
+	public Long getTemporaryId() {
 		return temporaryId;
 	}
 
@@ -493,16 +485,14 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param temporaryId
 	 *            the temporaryId to set
 	 */
-	public void setTemporaryId(Long temporaryId)
-	{
+	public void setTemporaryId(Long temporaryId) {
 		this.temporaryId = temporaryId;
 	}
 
 	/**
 	 * @return the orderAttribute
 	 */
-	public Integer getOrderAttribute()
-	{
+	public Integer getOrderAttribute() {
 		return orderAttribute;
 	}
 
@@ -510,8 +500,7 @@ public class Attribute extends AbstractEntity implements Serializable
 	 * @param orderAttribute
 	 *            the orderAttribute to set
 	 */
-	public void setOrderAttribute(Integer orderAttribute)
-	{
+	public void setOrderAttribute(Integer orderAttribute) {
 		this.orderAttribute = orderAttribute;
 	}
 
@@ -523,7 +512,8 @@ public class Attribute extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * @param options the options to set
+	 * @param options
+	 *            the options to set
 	 */
 	public void setOptions(List<AttributeOption> options) {
 		this.options = options;

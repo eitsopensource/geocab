@@ -4,6 +4,8 @@
 package br.com.geocab.domain.entity.marker;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -239,7 +241,7 @@ public class Marker extends AbstractEntity implements Serializable
 	}
 
 	/**
-	 * TODO Verifica se é utilizada no sistema
+	 * TODO Verifica se ï¿½ utilizada no sistema
 	 * 
 	 * @param id
 	 * @param latitudeGeometry
@@ -301,28 +303,28 @@ public class Marker extends AbstractEntity implements Serializable
 	 *								BEHAVIORS
 	 *-------------------------------------------------------------------*/
 
-	/**
+	/**,0
 	 * Formata os attributos
 	 * @return
 	 */
 	public String formattedAttributes()
-	{
+	{		
+		this.formattedNameAttributes();
+	
+		this.handlerDuplicateAttributes();
+		
 		String formattedAttributes = new String();
 		
 		for (MarkerAttribute markerAttribute : this.getMarkerAttribute())
 		{		
 			if (markerAttribute.getAttribute().getName() != null && markerAttribute.getAttribute().getType() != AttributeType.PHOTO_ALBUM)
-			{
-				if (formattedAttributes.length() > 0)
+			{	
+				if (!formattedAttributes.isEmpty())
 				{
-					formattedAttributes += "," + markerAttribute.getAttribute().getName() + ":" + markerAttribute.getAttribute().formmattedTypeAttributes();
+					formattedAttributes += ",";
 				}
-				else
-				{
-					formattedAttributes += markerAttribute.getAttribute().getName() + ":" + markerAttribute.getAttribute().formmattedTypeAttributes();
-				}
-				// O 
-				markerAttribute.getAttribute().formmatNameAttribute();
+				formattedAttributes += markerAttribute.getAttribute().getName() + ":" + markerAttribute.getAttribute().formmattedTypeAttributes();
+				
 			}
 		}
 		
@@ -345,7 +347,7 @@ public class Marker extends AbstractEntity implements Serializable
 	
 	/**
 	 * Remove atributos com nomes duplicados
-	 * Geotools não permite atributos com nomes duplicados
+	 * Geotools nï¿½o permite atributos com nomes duplicados
 	 */
 	public void handlerDuplicateAttributes()
 	{
